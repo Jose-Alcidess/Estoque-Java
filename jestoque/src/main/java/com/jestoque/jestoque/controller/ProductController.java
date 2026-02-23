@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController // Define que esta classe é uma API REST
 @RequestMapping("/api/products") // Define a rota base: http://localhost:8080/api/products
-@CrossOrigin(origins = "*") // Permite que o Angular (ou outros) acesse a API
+@CrossOrigin(origins = "http://localhost:4200") // Permite que o Angular (ou outros) acesse a API
 public class ProductController {
 
     private final ProductService productService;
@@ -26,4 +26,8 @@ public class ProductController {
     public Product create(@RequestBody Product product) {
         return productService.save(product);
     }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        productService.delete(id); // Use o nome da variável do seu service
+}
 }
