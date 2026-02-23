@@ -1,7 +1,10 @@
 export interface Product {
-    id?: number;          // O '?' significa que o ID é opcional (o Java que gera)
+    id?: number;
+    sku: string;
     name: string;
-    description: string;
-    price: number;
-    quantity: number;
+    description?: string; // O '?' torna o campo opcional, resolvendo parte do erro
+    salePrice: number;    // Substitui o antigo 'price'
+    currentStock: number; // Substitui o antigo 'quantity'
+    minStock: number;
+    ean?: string;         // Opcional também
 }

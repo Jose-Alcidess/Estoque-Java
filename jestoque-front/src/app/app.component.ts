@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 1. Necessário para o [(ngModel)]
+import { FormsModule } from '@angular/forms';
 import { ProductService } from './services/product.service';
 import { Product } from './models/product';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
-  templateUrl: './app.html', 
+  imports: [CommonModule, FormsModule],
+  templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class AppComponent implements OnInit {
   products: Product[] = [];
   
-  newProduct: Product = { name: '', description: '', price: 0, quantity: 0 };
+  // Objeto preparado para a nova estrutura
+  newProduct: Product = this.resetForm();
 
   constructor(private productService: ProductService) {}
 
@@ -22,25 +23,35 @@ export class AppComponent implements OnInit {
     this.loadProducts();
   }
 
-  loadProducts() {
+  loadProducts(): void {
     this.productService.listAll().subscribe(data => this.products = data);
   }
-  addProduct() {
+
+  addProduct(): void {
     this.productService.save(this.newProduct).subscribe({
       next: () => {
         this.loadProducts();
-        this.newProduct = { name: '', description: '', price: 0, quantity: 0 };
+        this.newProduct = this.resetForm();
       },
-      error: (err) => console.error('Erro ao salvar:', err)
+      error: (err) => console.error('Erro ao salvar produto:', err)
     });
   }
-  deleteProduct(id: number) {
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
-      this.productService.delete(id).subscribe({
-        next: () => this.loadProducts(),
-        error: (err) => console.error('Erro ao excluir:', err)
-      });
+
+  deleteProduct(id: number): void {
+    if (confirm('Deseja realmente excluir este item?')) {
+      this.productService.delete(id).subscribe(() => this.loadProducts());
     }
   }
 
+  private resetForm(): Product {
+    return {
+    sku: '',
+    name: '',
+    salePrice: 0,
+    currentStock: 0,
+    minStock: 0,
+    description: '', // Se você quiser manter a descrição, inicialize-a aqui
+    ean: ''
+  };
+  }
 }

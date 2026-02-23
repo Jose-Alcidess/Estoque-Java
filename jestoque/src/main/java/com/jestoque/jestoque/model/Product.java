@@ -1,23 +1,52 @@
 package com.jestoque.jestoque.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 
-@Entity // Diz ao Hibernate que esta classe é uma tabela
-@Table(name = "tb_products") // Define o nome da tabela no banco
-@Data // Gerencia Getters, Setters, equals, hashCode e toString via Lombok
-@NoArgsConstructor // Cria um construtor vazio (obrigatório para o JPA)
-@AllArgsConstructor // Cria um construtor com todos os campos
+@Entity
+@Table(name = "products")
 public class Product {
 
-    @Id // Define que este campo é a Chave Primária
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incremento (1, 2, 3...)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, length = 100) // Campo obrigatório no banco
+
+    @Column(unique = true, nullable = false)
+    private String sku; // Identificador único para escalabilidade
+
     private String name;
     private String description;
-    private Double price;
-    private Integer quantity;
+    private String ean; // Código de barras
+
+    private BigDecimal salePrice;
+    private Integer currentStock;
+    private Integer minStock;
+
+    // Construtor padrão exigido pelo JPA
+    public Product() {}
+
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getSku() { return sku; }
+    public void setSku(String sku) { this.sku = sku; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getEan() { return ean; }
+    public void setEan(String ean) { this.ean = ean; }
+
+    public BigDecimal getSalePrice() { return salePrice; }
+    public void setSalePrice(BigDecimal salePrice) { this.salePrice = salePrice; }
+
+    public Integer getCurrentStock() { return currentStock; }
+    public void setCurrentStock(Integer currentStock) { this.currentStock = currentStock; }
+
+    public Integer getMinStock() { return minStock; }
+    public void setMinStock(Integer minStock) { this.minStock = minStock; }
 }

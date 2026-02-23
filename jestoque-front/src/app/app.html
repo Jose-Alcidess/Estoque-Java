@@ -1,82 +1,71 @@
-<div class="main-layout">
-  <div class="container">
-    
-    <section class="card-cadastro shadow-sm">
-      <h2 class="titulo-sessao">🆕 Novo Produto</h2>
+<div class="container py-4">
+  <div class="card border-0 shadow-sm mb-5">
+    <div class="card-body p-4">
+      <h4 class="card-title fw-bold mb-4">🆕 Cadastro de Inventário</h4>
       
       <div class="row g-3">
-        <div class="col-md-3">
-          <label class="form-label">Nome</label>
-          <input [(ngModel)]="newProduct.name" class="form-control" placeholder="Ex: Teclado Mecânico">
-        </div>
-        
-        <div class="col-md-3">
-          <label class="form-label">Descrição</label>
-          <input [(ngModel)]="newProduct.description" class="form-control" placeholder="Opcional">
-        </div>
-        
         <div class="col-md-2">
-          <label class="form-label">Preço</label>
-          <div class="input-group">
-            <span class="input-group-text">R$</span>
-            <input type="number" [(ngModel)]="newProduct.price" class="form-control">
-          </div>
+          <label class="small fw-bold">SKU (Interno)</label>
+          <input [(ngModel)]="newProduct.sku" class="form-control" placeholder="EX: MOD-001">
         </div>
-        
-        <div class="col-md-2">
-          <label class="form-label">Quantidade</label>
-          <input type="number" [(ngModel)]="newProduct.quantity" class="form-control">
+        <div class="col-md-4">
+          <label class="small fw-bold">Nome do Produto</label>
+          <input [(ngModel)]="newProduct.name" class="form-control" placeholder="Nome completo">
         </div>
-        
-        <div class="col-md-2 d-flex align-items-end">
-          <button (click)="addProduct()" class="btn btn-primary w-100 btn-adicionar" [disabled]="!newProduct.name">
-            Adicionar
+        <div class="col-md-3">
+          <label class="small fw-bold">EAN / Código de Barras</label>
+          <input [(ngModel)]="newProduct.ean" class="form-control" placeholder="789...">
+        </div>
+        <div class="col-md-3">
+          <label class="small fw-bold">Preço de Venda</label>
+          <input type="number" [(ngModel)]="newProduct.salePrice" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <label class="small fw-bold">Estoque Atual</label>
+          <input type="number" [(ngModel)]="newProduct.currentStock" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <label class="small fw-bold">Estoque Mínimo</label>
+          <input type="number" [(ngModel)]="newProduct.minStock" class="form-control">
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+          <button (click)="addProduct()" class="btn btn-primary w-100 fw-bold" [disabled]="!newProduct.sku || !newProduct.name">
+            Confirmar Entrada
           </button>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <hr class="my-5">
-
-    <section>
-      <h2 class="titulo-sessao">📦 Estoque Atual</h2>
-      <div class="table-responsive shadow-sm rounded">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-dark">
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Produto</th>
-              <th scope="col">Descrição</th>
-              <th scope="col">Preço</th>
-              <th scope="col" class="text-center">Qtd</th>
-              <th scope="col" class="text-center">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of products">
-              <td><span class="badge bg-light text-dark">#{{ p.id }}</span></td>
-              <td class="fw-bold">{{ p.name }}</td>
-              <td class="text-muted small">{{ p.description }}</td>
-              <td>{{ p.price | currency:'BRL' }}</td>
-              <td class="text-center">
-                <span [class]="p.quantity > 0 ? 'badge bg-success' : 'badge bg-danger'">
-                  {{ p.quantity }}
-                </span>
-              </td>
-              <td class="text-center">
-                <button (click)="deleteProduct(p.id!)" class="btn btn-outline-danger btn-sm rounded-pill">
-                  Excluir
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <div *ngIf="products.length === 0" class="empty-state text-center py-5">
-        <p class="text-muted">Nenhum produto encontrado. Comece adicionando um acima!</p>
-      </div>
-    </section>
-
+  <h4 class="fw-bold mb-3">📦 Painel de Estoque</h4>
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0 bg-white">
+      <thead class="table-dark">
+        <tr>
+          <th>SKU</th>
+          <th>Produto</th>
+          <th>Preço</th>
+          <th class="text-center">Qtd Atual</th>
+          <th class="text-center">Status</th>
+          <th class="text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td class="text-muted fw-bold">{{ p.sku }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.salePrice | currency:'BRL' }}</td>
+          <td class="text-center">{{ p.currentStock }}</td>
+          <td class="text-center">
+            <span class="badge" [ngClass]="p.currentStock <= p.minStock ? 'bg-danger' : 'bg-success'">
+              {{ p.currentStock <= p.minStock ? 'ABAIXO DO MÍNIMO' : 'OK' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <button (click)="deleteProduct(p.id!)" class="btn btn-sm btn-outline-danger">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
