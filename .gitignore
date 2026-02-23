@@ -1,0 +1,18 @@
+# Java / Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+.mtj.tmp/
+*.jar
+*.war
+*.ear
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
