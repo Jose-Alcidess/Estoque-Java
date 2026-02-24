@@ -3,7 +3,7 @@ package com.jestoque.jestoque.service;
 import com.jestoque.jestoque.model.Product;
 import com.jestoque.jestoque.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-
+import java.util.Optional;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -19,6 +19,9 @@ public class ProductService {
     // Método para listar todos os produtos
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
     }
 
     // Método para salvar um produto 

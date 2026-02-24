@@ -1,13 +1,16 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 1. Adicione o ChangeDetectorRef aqui
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { BaseChartDirective } from 'ng2-charts'; // 1. Importação nova do Gráfico!
+import { ChartConfiguration, ChartData, ChartType, Chart, registerables } from 'chart.js'; // 2. Tipos do Chart.js
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product';
 
+Chart.register(...registerables);
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, BaseChartDirective], // 3. Adicione o BaseChartDirective aqui!
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
@@ -16,9 +19,36 @@ export class DashboardComponent implements OnInit {
   totalValue: number = 0;
   lowStockProducts: Product[] = [];
 
+  // === CONFIGURAÇÕES DO GRÁFICO DE PIZZA (DOUGHNUT) ===
+  public doughnutChartType: ChartType = 'doughnut';
+  public doughnutChartData: ChartData<'doughnut'> = {
+    labels: [], // Nomes dos produtos
+    datasets: [
+      {
+        data: [], // Quantidade em estoque
+        backgroundColor: [
+          '#6366f1', // Indigo 500
+          '#10b981', // Emerald 500
+          '#f43f5e', // Rose 500
+          '#f59e0b', // Amber 500
+          '#0ea5e9', // Sky 500
+          '#8b5cf6'  // Violet 500
+        ],
+        hoverOffset: 4
+      }
+    ]
+  };
+  public doughnutChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right' }
+    }
+  };
+
   constructor(
     private productService: ProductService,
-    private cdr: ChangeDetectorRef // 2. Injete ele aqui
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -29,8 +59,8 @@ export class DashboardComponent implements OnInit {
     this.productService.listAll().subscribe(data => {
       this.products = data;
       this.calculateMetrics();
-      
-      this.cdr.detectChanges(); // 3. A MÁGICA: Força o HTML a se atualizar na mesma hora!
+      this.buildChart(); // 4. Chama a função de montar o gráfico
+      this.cdr.detectChanges();
     });
   }
 
@@ -38,5 +68,16 @@ export class DashboardComponent implements OnInit {
     this.totalItems = this.products.length;
     this.totalValue = this.products.reduce((acc, curr) => acc + (curr.salePrice * curr.currentStock), 0);
     this.lowStockProducts = this.products.filter(p => p.currentStock <= p.minStock);
+  }
+
+  // 5. Mágica do Gráfico: Pega os dados do Java e transforma em fatias da pizza
+  buildChart(): void {
+    // Pega os 5 produtos com maior estoque para não poluir o gráfico
+    const topProducts = [...this.products]
+      .sort((a, b) => b.currentStock - a.currentStock)
+      .slice(0, 5);
+
+    this.doughnutChartData.labels = topProducts.map(p => p.name);
+    this.doughnutChartData.datasets[0].data = topProducts.map(p => p.currentStock);
   }
 }

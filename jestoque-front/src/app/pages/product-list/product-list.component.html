@@ -1,45 +1,79 @@
-<div class="row">
-  <div class="col-12">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4 class="fw-bold mb-0">📦 Painel de Estoque</h4>
-      <span class="badge bg-primary">{{ products.length }} Produtos cadastrados</span>
+<div class="space-y-6">
+  
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Estoque de Produtos</h2>
+      <p class="text-sm text-slate-500 mt-1">Gerencie seu catálogo, preços e quantidades em tempo real.</p>
+    </div>
+    
+    <a routerLink="/novo-produto" class="inline-flex items-center justify-center px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm gap-2">
+      <i class="ph-bold ph-plus"></i>
+      Adicionar Produto
+    </a>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+    
+    <div *ngIf="products.length === 0" class="p-12 text-center">
+      <div class="w-16 h-16 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="ph ph-package text-3xl"></i>
+      </div>
+      <h3 class="text-lg font-medium text-slate-800 mb-1">Nenhum produto cadastrado</h3>
+      <p class="text-slate-500 mb-6">Comece adicionando seu primeiro item ao estoque.</p>
+      <a routerLink="/novo-produto" class="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-100 transition-colors">
+        Adicionar agora
+      </a>
     </div>
 
-    <div class="table-responsive shadow-sm rounded">
-      <table class="table table-hover align-middle mb-0 bg-white">
-        <thead class="table-dark">
+    <div class="overflow-x-auto" *ngIf="products.length > 0">
+      <table class="w-full text-left text-sm text-slate-600">
+        <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
           <tr>
-            <th>SKU</th>
-            <th>Produto</th>
-            <th>Preço</th>
-            <th class="text-center">Qtd Atual</th>
-            <th class="text-center">Status</th>
-            <th class="text-center">Ações</th>
+            <th class="px-6 py-4">Produto</th>
+            <th class="px-6 py-4 text-center">SKU</th>
+            <th class="px-6 py-4 text-right">Preço de Venda</th>
+            <th class="px-6 py-4 text-center">Estoque</th>
+            <th class="px-6 py-4 text-right">Ações</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let p of products">
-            <td class="text-muted fw-bold">{{ p.sku }}</td>
-            <td>{{ p.name }}</td>
-            <td>{{ p.salePrice | currency:'BRL' }}</td>
-            <td class="text-center">{{ p.currentStock }}</td>
-            <td class="text-center">
-              <span class="badge" [ngClass]="p.currentStock <= p.minStock ? 'bg-danger' : 'bg-success'">
-                {{ p.currentStock <= p.minStock ? 'ABAIXO DO MÍNIMO' : 'OK' }}
+        <tbody class="divide-y divide-slate-100">
+          <tr *ngFor="let p of products" class="hover:bg-slate-50 transition-colors group">
+            
+            <td class="px-6 py-4 font-medium text-slate-800">{{ p.name }}</td>
+            <td class="px-6 py-4 text-center text-slate-500">{{ p.sku }}</td>
+            <td class="px-6 py-4 text-right font-medium text-emerald-600">{{ p.salePrice | currency:'BRL' }}</td>
+            
+            <td class="px-6 py-4 text-center">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                    [ngClass]="{
+                      'bg-emerald-50 text-emerald-700 border-emerald-200': p.currentStock > p.minStock,
+                      'bg-rose-50 text-rose-700 border-rose-200': p.currentStock <= p.minStock
+                    }">
+                {{ p.currentStock }} unid.
               </span>
             </td>
-            <td class="text-center">
-              <button (click)="deleteProduct(p.id!)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                Excluir
-              </button>
+            
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2">
+                
+                <button [routerLink]="['/editar-produto', p.id]" class="p-2 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg transition-colors" title="Editar">
+                  <i class="ph ph-pencil-simple text-lg"></i>
+                </button>
+                
+                <button (click)="deleteProduct(p.id!)" class="p-2 text-rose-500 bg-rose-50 hover:bg-rose-100 hover:text-rose-700 rounded-lg transition-colors" title="Excluir">
+                  <i class="ph ph-trash text-lg"></i>
+                </button>
+
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <div *ngIf="products.length === 0" class="text-center py-5 bg-white shadow-sm rounded mt-3">
-      <p class="text-muted mb-0">Nenhum produto em estoque.</p>
+    
+    <div class="px-6 py-4 border-t border-slate-200 bg-slate-50/50 text-sm text-slate-500 flex justify-between items-center" *ngIf="products.length > 0">
+      <span>Exibindo <strong>{{ products.length }}</strong> produto(s) no total.</span>
     </div>
+
   </div>
 </div>

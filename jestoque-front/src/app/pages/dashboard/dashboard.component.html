@@ -1,61 +1,109 @@
-<div class="row mb-4">
-  <div class="col-12">
-    <h3 class="fw-bold mb-4">📊 Visão Geral do Jestoque</h3>
+<div class="space-y-6">
+  
+  <div>
+    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Visão Geral</h2>
+    <p class="text-sm text-slate-500 mt-1">Acompanhe os indicadores principais do seu estoque.</p>
   </div>
 
-  <div class="col-md-4 mb-3">
-    <div class="card border-0 shadow-sm bg-primary text-white h-100">
-      <div class="card-body py-4">
-        <h6 class="text-uppercase fw-bold text-white-50 mb-2">Total de Itens Cadastrados</h6>
-        <h2 class="display-5 fw-bold mb-0">{{ totalItems }}</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-start justify-between group hover:shadow-md transition-shadow">
+      <div>
+        <p class="text-sm font-medium text-slate-500 mb-1">Itens Cadastrados</p>
+        <h3 class="text-3xl font-bold text-slate-800">{{ totalItems }}</h3>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
+        <i class="ph-fill ph-package text-2xl"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-start justify-between group hover:shadow-md transition-shadow">
+      <div>
+        <p class="text-sm font-medium text-slate-500 mb-1">Valor em Estoque</p>
+        <h3 class="text-3xl font-bold text-emerald-600">{{ totalValue | currency:'BRL' }}</h3>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+        <i class="ph-fill ph-currency-circle-dollar text-2xl"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-start justify-between group hover:shadow-md transition-shadow">
+      <div>
+        <p class="text-sm font-medium text-slate-500 mb-1">Itens em Alerta</p>
+        <h3 class="text-3xl font-bold" [ngClass]="{'text-rose-600': lowStockProducts.length > 0, 'text-slate-800': lowStockProducts.length === 0}">
+          {{ lowStockProducts.length }}
+        </h3>
+      </div>
+      <div class="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+           [ngClass]="{'bg-rose-50 text-rose-600': lowStockProducts.length > 0, 'bg-slate-50 text-slate-400': lowStockProducts.length === 0}">
+        <i class="ph-fill ph-warning text-2xl"></i>
       </div>
     </div>
   </div>
 
-  <div class="col-md-4 mb-3">
-    <div class="card border-0 shadow-sm bg-success text-white h-100">
-      <div class="card-body py-4">
-        <h6 class="text-uppercase fw-bold text-white-50 mb-2">Valor Total em Estoque</h6>
-        <h2 class="display-5 fw-bold mb-0">{{ totalValue | currency:'BRL' }}</h2>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
+    
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col">
+      <div class="mb-4">
+        <h3 class="text-base font-semibold text-slate-800">Distribuição de Estoque</h3>
+        <p class="text-xs text-slate-500">Top 5 produtos com mais unidades</p>
       </div>
+      
+      <div class="flex-1 min-h-[250px] relative flex justify-center">
+        <canvas baseChart
+          [data]="doughnutChartData"
+          [options]="doughnutChartOptions"
+          [type]="doughnutChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-sm border border-slate-100 p-8 flex flex-col justify-center text-white relative overflow-hidden">
+      <i class="ph-fill ph-trend-up absolute -bottom-4 -right-4 text-9xl text-white opacity-10 pointer-events-none"></i>
+      
+      <h3 class="text-xl font-bold mb-2 z-10">Saúde do Estoque</h3>
+      <p class="text-indigo-100 text-sm mb-6 z-10 leading-relaxed">
+        Manter o controle rigoroso das entradas e saídas garante que o seu capital não fique parado. 
+        Em breve, adicionaremos aqui o gráfico de fluxo de caixa mensal.
+      </p>
+      <div class="z-10">
+        <a routerLink="/novo-produto" class="inline-flex items-center justify-center px-4 py-2 bg-white text-indigo-600 text-sm font-semibold rounded-lg hover:bg-indigo-50 transition-colors shadow-sm">
+          Cadastrar Novo Item
+        </a>
+      </div>
+    </div>
+
+  </div>
+  <div *ngIf="lowStockProducts.length > 0" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mt-8">
+    <div class="px-6 py-5 border-b border-slate-100 bg-rose-50/50 flex items-center gap-2">
+      <i class="ph-fill ph-warning-circle text-rose-500 text-xl"></i>
+      <h3 class="text-base font-semibold text-rose-700">Ação Necessária: Reposição de Estoque</h3>
+    </div>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-slate-600">
+        <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-100">
+          <tr>
+            <th class="px-6 py-4">Produto</th>
+            <th class="px-6 py-4 text-center">SKU</th>
+            <th class="px-6 py-4 text-center">Estoque Atual</th>
+            <th class="px-6 py-4 text-center">Mínimo Exigido</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr *ngFor="let p of lowStockProducts" class="hover:bg-slate-50 transition-colors">
+            <td class="px-6 py-4 font-medium text-slate-800">{{ p.name }}</td>
+            <td class="px-6 py-4 text-center text-slate-500">{{ p.sku }}</td>
+            <td class="px-6 py-4 text-center">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-700">
+                {{ p.currentStock }} unid.
+              </span>
+            </td>
+            <td class="px-6 py-4 text-center text-slate-500">{{ p.minStock }} unid.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="col-md-4 mb-3">
-    <div class="card border-0 shadow-sm bg-danger text-white h-100">
-      <div class="card-body py-4">
-        <h6 class="text-uppercase fw-bold text-white-50 mb-2">Itens em Alerta (Baixo Estoque)</h6>
-        <h2 class="display-5 fw-bold mb-0">{{ lowStockProducts.length }}</h2>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row" *ngIf="lowStockProducts.length > 0">
-  <div class="col-12">
-    <div class="card border-0 shadow-sm border-top border-danger border-4 mt-3">
-      <div class="card-body p-4">
-        <h5 class="fw-bold text-danger mb-3">⚠️ Ação Necessária: Repor Estoque</h5>
-        
-        <div class="table-responsive">
-          <table class="table align-middle">
-            <thead>
-              <tr class="text-muted">
-                <th>Produto</th>
-                <th class="text-center">Estoque Atual</th>
-                <th class="text-center">Mínimo Exigido</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let p of lowStockProducts">
-                <td class="fw-bold">{{ p.name }} <span class="text-muted small">({{ p.sku }})</span></td>
-                <td class="text-center text-danger fw-bold">{{ p.currentStock }}</td>
-                <td class="text-center">{{ p.minStock }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

@@ -22,4 +22,10 @@ export class ProductService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  findById(id: number) {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+  }
+  update(id: number, product: Product){
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
+  }
 }

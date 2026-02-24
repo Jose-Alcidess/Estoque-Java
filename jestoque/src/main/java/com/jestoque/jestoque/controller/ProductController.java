@@ -2,6 +2,8 @@ package com.jestoque.jestoque.controller;
 
 import com.jestoque.jestoque.model.Product;
 import com.jestoque.jestoque.service.ProductService;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +24,32 @@ public class ProductController {
         return productService.findAll();
     }
 
+    @GetMapping("/{id}") // Responde a GET /api/products/{id}
+    public ResponseEntity<Product> findById(@PathVariable Long id) {
+        // Corrigido para usar o seu productService
+        return productService.findById(id)
+                .map(product -> ResponseEntity.ok().body(product))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping // Responde a requisições POST
     public Product create(@RequestBody Product product) {
         return productService.save(product);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
+        return productService.findById(id)
+                .map(existingProduct -> {
+                    product.setId(existingProduct.getId()); 
+                    Product updatedProduct = productService.save(product);
+                    return ResponseEntity.ok().body(updatedProduct);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        productService.delete(id); // Use o nome da variável do seu service
-}
+        productService.delete(id); 
+    }
 }
