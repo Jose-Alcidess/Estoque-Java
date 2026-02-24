@@ -1,71 +1,21 @@
-<div class="container py-4">
-  <div class="card border-0 shadow-sm mb-5">
-    <div class="card-body p-4">
-      <h4 class="card-title fw-bold mb-4">🆕 Cadastro de Inventário</h4>
-      
-      <div class="row g-3">
-        <div class="col-md-2">
-          <label class="small fw-bold">SKU (Interno)</label>
-          <input [(ngModel)]="newProduct.sku" class="form-control" placeholder="EX: MOD-001">
-        </div>
-        <div class="col-md-4">
-          <label class="small fw-bold">Nome do Produto</label>
-          <input [(ngModel)]="newProduct.name" class="form-control" placeholder="Nome completo">
-        </div>
-        <div class="col-md-3">
-          <label class="small fw-bold">EAN / Código de Barras</label>
-          <input [(ngModel)]="newProduct.ean" class="form-control" placeholder="789...">
-        </div>
-        <div class="col-md-3">
-          <label class="small fw-bold">Preço de Venda</label>
-          <input type="number" [(ngModel)]="newProduct.salePrice" class="form-control">
-        </div>
-        <div class="col-md-3">
-          <label class="small fw-bold">Estoque Atual</label>
-          <input type="number" [(ngModel)]="newProduct.currentStock" class="form-control">
-        </div>
-        <div class="col-md-3">
-          <label class="small fw-bold">Estoque Mínimo</label>
-          <input type="number" [(ngModel)]="newProduct.minStock" class="form-control">
-        </div>
-        <div class="col-md-6 d-flex align-items-end">
-          <button (click)="addProduct()" class="btn btn-primary w-100 fw-bold" [disabled]="!newProduct.sku || !newProduct.name">
-            Confirmar Entrada
-          </button>
-        </div>
-      </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/">📦 JESTOQUE</a>
+    
+    <div class="navbar-nav me-auto">
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Painel Principal</a>
+      <a class="nav-link" routerLink="/estoque" routerLinkActive="active">Estoque</a>
     </div>
-  </div>
 
-  <h4 class="fw-bold mb-3">📦 Painel de Estoque</h4>
-  <div class="table-responsive shadow-sm rounded">
-    <table class="table table-hover align-middle mb-0 bg-white">
-      <thead class="table-dark">
-        <tr>
-          <th>SKU</th>
-          <th>Produto</th>
-          <th>Preço</th>
-          <th class="text-center">Qtd Atual</th>
-          <th class="text-center">Status</th>
-          <th class="text-center">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of products">
-          <td class="text-muted fw-bold">{{ p.sku }}</td>
-          <td>{{ p.name }}</td>
-          <td>{{ p.salePrice | currency:'BRL' }}</td>
-          <td class="text-center">{{ p.currentStock }}</td>
-          <td class="text-center">
-            <span class="badge" [ngClass]="p.currentStock <= p.minStock ? 'bg-danger' : 'bg-success'">
-              {{ p.currentStock <= p.minStock ? 'ABAIXO DO MÍNIMO' : 'OK' }}
-            </span>
-          </td>
-          <td class="text-center">
-            <button (click)="deleteProduct(p.id!)" class="btn btn-sm btn-outline-danger">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="navbar-nav">
+      <a class="btn btn-success fw-bold text-white px-4" routerLink="/novo-produto" routerLinkActive="d-none">
+        + Novo Produto
+      </a>
+    </div>
+
   </div>
+</nav>
+
+<div class="container">
+  <router-outlet></router-outlet>
 </div>

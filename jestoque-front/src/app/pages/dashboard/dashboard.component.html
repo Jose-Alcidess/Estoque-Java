@@ -1,0 +1,61 @@
+<div class="row mb-4">
+  <div class="col-12">
+    <h3 class="fw-bold mb-4">📊 Visão Geral do Jestoque</h3>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm bg-primary text-white h-100">
+      <div class="card-body py-4">
+        <h6 class="text-uppercase fw-bold text-white-50 mb-2">Total de Itens Cadastrados</h6>
+        <h2 class="display-5 fw-bold mb-0">{{ totalItems }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm bg-success text-white h-100">
+      <div class="card-body py-4">
+        <h6 class="text-uppercase fw-bold text-white-50 mb-2">Valor Total em Estoque</h6>
+        <h2 class="display-5 fw-bold mb-0">{{ totalValue | currency:'BRL' }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm bg-danger text-white h-100">
+      <div class="card-body py-4">
+        <h6 class="text-uppercase fw-bold text-white-50 mb-2">Itens em Alerta (Baixo Estoque)</h6>
+        <h2 class="display-5 fw-bold mb-0">{{ lowStockProducts.length }}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="lowStockProducts.length > 0">
+  <div class="col-12">
+    <div class="card border-0 shadow-sm border-top border-danger border-4 mt-3">
+      <div class="card-body p-4">
+        <h5 class="fw-bold text-danger mb-3">⚠️ Ação Necessária: Repor Estoque</h5>
+        
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr class="text-muted">
+                <th>Produto</th>
+                <th class="text-center">Estoque Atual</th>
+                <th class="text-center">Mínimo Exigido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of lowStockProducts">
+                <td class="fw-bold">{{ p.name }} <span class="text-muted small">({{ p.sku }})</span></td>
+                <td class="text-center text-danger fw-bold">{{ p.currentStock }}</td>
+                <td class="text-center">{{ p.minStock }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0">📦 Painel de Estoque</h4>
+      <span class="badge bg-primary">{{ products.length }} Produtos cadastrados</span>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded">
+      <table class="table table-hover align-middle mb-0 bg-white">
+        <thead class="table-dark">
+          <tr>
+            <th>SKU</th>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th class="text-center">Qtd Atual</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of products">
+            <td class="text-muted fw-bold">{{ p.sku }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.salePrice | currency:'BRL' }}</td>
+            <td class="text-center">{{ p.currentStock }}</td>
+            <td class="text-center">
+              <span class="badge" [ngClass]="p.currentStock <= p.minStock ? 'bg-danger' : 'bg-success'">
+                {{ p.currentStock <= p.minStock ? 'ABAIXO DO MÍNIMO' : 'OK' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button (click)="deleteProduct(p.id!)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="products.length === 0" class="text-center py-5 bg-white shadow-sm rounded mt-3">
+      <p class="text-muted mb-0">Nenhum produto em estoque.</p>
+    </div>
+  </div>
+</div>
