@@ -59,7 +59,7 @@ export class DashboardComponent implements OnInit {
     this.productService.listAll().subscribe(data => {
       this.products = data;
       this.calculateMetrics();
-      this.buildChart(); // 4. Chama a função de montar o gráfico
+      this.buildChart(); 
       this.cdr.detectChanges();
     });
   }
@@ -69,15 +69,28 @@ export class DashboardComponent implements OnInit {
     this.totalValue = this.products.reduce((acc, curr) => acc + (curr.salePrice * curr.currentStock), 0);
     this.lowStockProducts = this.products.filter(p => p.currentStock <= p.minStock);
   }
-
-  // 5. Mágica do Gráfico: Pega os dados do Java e transforma em fatias da pizza
+//gráfico 
   buildChart(): void {
-    // Pega os 5 produtos com maior estoque para não poluir o gráfico
     const topProducts = [...this.products]
       .sort((a, b) => b.currentStock - a.currentStock)
       .slice(0, 5);
 
-    this.doughnutChartData.labels = topProducts.map(p => p.name);
-    this.doughnutChartData.datasets[0].data = topProducts.map(p => p.currentStock);
+    this.doughnutChartData = {
+      labels: topProducts.map(p => p.name),
+      datasets: [
+        {
+          data: topProducts.map(p => p.currentStock),
+          backgroundColor: [
+            '#6366f1', 
+            '#10b981', 
+            '#f43f5e', 
+            '#f59e0b', 
+            '#0ea5e9', 
+            '#8b5cf6' 
+          ],
+          hoverOffset: 4
+        }
+      ]
+    };
   }
 }

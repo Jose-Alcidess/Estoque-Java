@@ -3,16 +3,18 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
+  searchTerm: string = '';
 
   constructor(private productService: ProductService, private cdr: ChangeDetectorRef) {}
 
@@ -42,5 +44,15 @@ export class ProductListComponent implements OnInit {
       });
 
     }  
+  }
+  get filteredProducts(): Product[] {
+    if (!this.searchTerm) {
+      return this.products;
+    }
+    const term = this.searchTerm.toLowerCase();
+    return this.products.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      p.sku.toLowerCase().includes(term)
+    );
   }
 }

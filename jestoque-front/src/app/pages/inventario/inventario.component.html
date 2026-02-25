@@ -1,0 +1,57 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Balanço de Inventário</h2>
+    <p class="text-sm text-slate-500 mt-1">Compare o estoque registrado no sistema com a contagem física real.</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex items-center justify-between">
+    <div>
+      <p class="text-sm font-medium text-slate-500">Divergência Total de Itens</p>
+      <h3 class="text-2xl font-bold" 
+          [ngClass]="{'text-rose-600': totalDiference < 0, 'text-emerald-600': totalDiference >= 0}">
+        {{ totalDiference > 0 ? '+' : '' }}{{ totalDiference }} unidades
+      </h3>
+    </div>
+    <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
+      <i class="ph-fill ph-scales text-2xl"></i>
+    </div>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-slate-600">
+        <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
+          <tr>
+            <th class="px-6 py-4">Produto</th>
+            <th class="px-6 py-4 text-center">SKU</th>
+            <th class="px-6 py-4 text-center">Estoque Sistema</th>
+            <th class="px-6 py-4 text-center">Contagem Física</th>
+            <th class="px-6 py-4 text-center">Diferença</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr *ngFor="let item of inventoryItems" class="hover:bg-slate-50 transition-colors">
+            <td class="px-6 py-4 font-medium text-slate-800">{{ item.name }}</td>
+            <td class="px-6 py-4 text-center text-slate-500">{{ item.sku }}</td>
+            <td class="px-6 py-4 text-center">
+              <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg font-medium">
+                {{ item.currentStock }}
+              </span>
+            </td>
+            
+            <td class="px-6 py-4 text-center">
+              <input type="number" [(ngModel)]="item.countedStock" 
+                     class="w-24 text-center px-3 py-1.5 bg-white border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-bold text-indigo-700">
+            </td>
+
+            <td class="px-6 py-4 text-center">
+              <span *ngIf="item.countedStock === item.currentStock" class="text-slate-400 font-medium">Ok</span>
+              <span *ngIf="item.countedStock > item.currentStock" class="text-emerald-600 font-bold">+{{ item.countedStock - item.currentStock }}</span>
+              <span *ngIf="item.countedStock < item.currentStock" class="text-rose-600 font-bold">{{ item.countedStock - item.currentStock }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
