@@ -1,14 +1,56 @@
-<div class="space-y-6">
+<div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
   <div>
-    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Configurações</h2>
-    <p class="text-sm text-slate-500 mt-1">Ajustes gerais do sistema.</p>
+    <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Configurações</h2>
+    <p class="text-slate-500 mt-2">Gerencie as preferências do sistema Jestoque.</p>
   </div>
-  
-  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 text-center">
-    <div class="w-16 h-16 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
-      <i class="ph ph-gear text-3xl"></i>
+
+  <div class="grid grid-cols-1 gap-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="flex items-center gap-3 mb-6">
+        <i class="ph-fill ph-palette text-indigo-600 text-2xl"></i>
+        <h3 class="text-lg font-semibold text-slate-800">Aparência e Regionalização</h3>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+          <div>
+            <p class="font-medium text-slate-700">Tema do Sistema</p>
+            <p class="text-sm text-slate-500">Alternar entre modo claro e escuro.</p>
+          </div>
+          <select class="bg-white border border-slate-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
+            <option>Seguir Sistema</option>
+            <option>Modo Claro</option>
+            <option>Modo Escuro</option>
+          </select>
+        </div>
+
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+          <div>
+            <p class="font-medium text-slate-700">Moeda Padrão</p>
+            <p class="text-sm text-slate-500">Usada nos cálculos de preço e venda.</p>
+          </div>
+          <select class="bg-white border border-slate-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
+            <option>Real (BRL - R$)</option>
+            <option>Dólar (USD - $)</option>
+            <option>Euro (EUR - €)</option>
+          </select>
+        </div>
+      </div>
     </div>
-    <h3 class="text-lg font-medium text-slate-800 mb-1">Página em Construção</h3>
-    <p class="text-slate-500">Em breve: Opções de tema, moeda e preferências de usuário.</p>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="flex items-center gap-3 mb-6">
+        <i class="ph-fill ph-bell-ringing text-indigo-600 text-2xl"></i>
+        <h3 class="text-lg font-semibold text-slate-800">Alertas de Estoque</h3>
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <p class="text-slate-600">Notificar quando um item atingir o estoque mínimo</p>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" checked class="sr-only peer">
+          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+        </label>
+      </div>
+    </div>
   </div>
 </div>
